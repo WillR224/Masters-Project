@@ -18,7 +18,7 @@ import scipy.integrate as scpI
 
 def getData(fileName):
     Dir = r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\Oscilloscope data\\First LGAD pulses 8-11 (50Hz,5%,-190V)\\'
-    reader = pd.read_csv(Dir + fileName + '.csv', skiprows=24)
+    reader = pd.read_csv(Dir + fileName + ".csv", skiprows=24)
     data = reader.to_numpy()
     data_array = np.array(data)
     return data_array
@@ -33,8 +33,8 @@ def plot(fileName):
 
 def differentiate(fileName):
     data = getData(fileName)
-    d = np.gradient(data[:,1], data[:,0])
-    plt.plot(d)
+    d = np.gradient(data[:,2], data[:,0])
+    plt.plot(data[:,0], d)
     plt.show()
 
 def integrate(fileName):
@@ -44,5 +44,6 @@ def integrate(fileName):
     plt.show()
     
 integrate("Test1")
+differentiate("Test1")
 plot("Test1")
 
