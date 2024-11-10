@@ -1,0 +1,40 @@
+dist: trusty
+
+language: python
+
+sudo: true
+matrix:
+  fast_finish: false
+  include:
+    - python: "2.7"
+cache:
+  directories:
+    - $HOME/.cache/pip
+    
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y gmsh  # Mesh program
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda update --yes conda
+  - conda config --add channels silab
+  - conda info -a
+  - conda install --yes coverage numpy pytables scipy matplotlib nose
+
+install:
+  - pip install xvfbwrapper  # fake x server for Qt gui tests
+  # PySparse is a better solver that only compiles with the git version and under linux, hackers at work ...
+  - pip install -e git://pysparse.git.sourceforge.net/gitroot/pysparse/pysparse#egg=PySparse
+  - pip install ez_setup 
+  - pip install -r requirements.txt -r requirements_tests.txt
+  # - pip install --user travis-sphinx
+
+script: 
+  - nosetests --with-coverage --cover-package=scarce
+  # - travis-sphinx -o docs build  # put index.html into docs folder as github demands
+
+after_success:
+  - coveralls
+  # - travis-sphinx deploy

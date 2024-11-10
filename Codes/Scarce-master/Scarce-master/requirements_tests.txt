@@ -1,0 +1,10 @@
+nose
+coverage
+coveralls
+tables
+#tox
+#requests
+#typing
+#flake8
+#pylint
+#pytest

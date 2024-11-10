@@ -1,0 +1,37 @@
+build: false  # Tell appveyor to not use msbuild
+
+environment:
+  matrix:
+    - PYTHON_VERSION: 2.7
+      MINICONDA: C:\Miniconda-x64
+      PYTHON_ARCH: "64"
+
+init:
+  - "ECHO %PYTHON%"
+  - ps: Start-FileDownload 'http://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi' C:\VCForPython27.msi; echo "Done"
+  - cmd: msiexec /i C:\VCForPython27.msi /quiet /qn
+  - ps: Start-FileDownload 'http://gmsh.info/bin/Windows/gmsh-2.14.1-Windows64.zip' C:\gmsh-2.14.1-Windows64.zip; echo "Done"
+  - cmd: 7z e c:\gmsh-2.14.1-Windows64.zip -oc:\gmsh
+  - set PATH=c:\\gmsh;%PATH%
+
+install:
+  # Miniconda setup + necessary external packages
+  - set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%  # Miniconda is already installed on appveyor: https://github.com/appveyor/ci/issues/359
+  - conda install --yes cython nose numpy pytables scipy matplotlib
+  - pip install ez_setup
+  - pip install -r requirements.txt
+  - python.exe setup.py develop
+
+test_script:
+  - nosetests
+  
+after_test:
+  - python setup.py bdist_wheel
+
+artifacts:
+  - path: dist\*
+  
+#on_success:
+#  - TODO: upload the content of dist/*.whl to a public wheelhouse
+
+
