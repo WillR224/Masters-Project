@@ -41,13 +41,7 @@ def plot(fileName):
 
     derivative_plot(data[:,0],data[:,2])
     integral_plot(data[:,0],data[:,2])
-    #cut_and_integrate(fileName)
-    cutArr = cut(data[:,0],data[:,2])
-    print(cutArr)
-    fig2 = plt.figure(dpi=100)
-    Ix,Iy = integrate(cutArr[:,0],cutArr[:,1])
-    print(Ix,Iy)
-    plt.plot(Ix,Iy)
+
 
 def derivative_plot(x,y):
     ax4 = fig1.add_subplot(224)
@@ -63,15 +57,14 @@ def differentiate(x,y):
     
 def integral_plot(x,y):
     ax3 = fig1.add_subplot(223)
-    I = integrate(x,y)[1]
-    ax3.plot(x,I)
+    ax3.plot(x,integrate(x,y)[1])
     ax3.plot([2.3e-8,2.3e-8],[-7e-9,5e-10])
     ax3.set_xlabel("time (s)")
     ax3.set_ylabel("Integral of V(t)")
 
 def integrate(x,y):
     I = scpI.cumtrapz(y,x, initial = 0)
-    return(x,I)
+    return x,I
 
 def cut(x,y):
     peak = []
@@ -81,31 +74,37 @@ def cut(x,y):
     peakArr = np.array(peak)
     return peakArr
 
-def integ(fileName):
-    data = getData(fileName)
-    Integral = scpI.cumtrapz(data[:,2],data[:,0], initial = 0)
-    I = np.array([data[:,0],Integral])
-    peak = []
-    peakInt = np.min(peakArr[:,1])
-    return peakInt
+#def integ(fileName):
+#     data = getData(fileName)
+#    Integral = scpI.cumtrapz(data[:,2],data[:,0], initial = 0)
+#    I = np.array([data[:,0],Integral])
+#    peak = []
+#    peakInt = np.min(peakArr[:,1])
+#    return peakInt
 
 def sCurve(fileNameArray,method):
-    integs = []
-    for i in fileNameArray:
-        int = integ(i)
-        integs.append(int)
+    integrals = []
+    for i in range(len(fileNameArray)):
+        data = getData(fileNameArray[i])
+        cutArr = cut(data[:,0],data[:,2])
+        xI, I = integrate(cutArr[:,0],cutArr[:,1])
+        Integral = np.min(I)
+        integrals.append(Integral)
+
     steps = np.linspace(0,870,30)
-    plt.plot(steps,integs)
-    Rvals = np.array([steps[11:30],integs[11:30]])
-    Lvals = np.array([steps[0:15],integs[0:15]])
+    Rvals = np.array([steps[12:30],integrals[12:30]])
+    Lvals = np.array([steps[0:15],integrals[0:15]])
+    fig2 = plt.figure(dpi=130)
+    plt.plot(steps,integrals)
+
     if method == 0:
-        Rpopt, Rpcov = curve_fit(erf, Rvals[0],Rvals[1], [1e-9,0,0,0])
-        Lpopt,Lpcov = curve_fit(erf, Lvals[0], Lvals[1], [1e-9,0,0,0])
-        Rarray = np.array([Rvals[0], Rpopt[0]*scpS.erf(Rpopt[1]*Rvals[0]+Rpopt[2])+Rpopt[3]])
-        Larray = np.array([Lvals[0], Lpopt[0]*scpS.erf(Lpopt[1]*Lvals[0]+Lpopt[2])+Lpopt[3]])
+        Rpopt, Rpcov = curve_fit(erf, Rvals[0],Rvals[1], [2e-9,0.01,-500,-2e-9])
+        Lpopt,Lpcov = curve_fit(erf, Lvals[0], Lvals[1], [-2e-9,0.01,-200,-2e-9])
+        Rarray = np.array([Rvals[0], Rpopt[0]*scpS.erf(Rpopt[1]*(Rvals[0]+Rpopt[2]))+Rpopt[3]])
+        Larray = np.array([Lvals[0], Lpopt[0]*scpS.erf(Lpopt[1]*(Lvals[0]+Lpopt[2]))+Lpopt[3]])
         plt.plot(Rarray[0],Rarray[1])
         plt.plot(Larray[0],Larray[1])
-        fig2 = plt.figure(dpi=130)
+        fig3 = plt.figure(dpi=130)
         plt.plot(Rarray[0], np.gradient(Rarray[1],Rarray[0]))
         plt.plot(Larray[0], np.gradient(Larray[1],Larray[0]))
 
@@ -116,38 +115,37 @@ def sCurve(fileNameArray,method):
         Lpopt,Lpcov = curve_fit(gauss, Lvals[0], Lvals[1], [50,200,1e-11,100])
         Rarray = np.array([Rvals[0], gauss(Rvals[0],Rpopt[0],Rpopt[1],Rpopt[2],Rpopt[3])])
         Larray = np.array([Lvals[0], gauss(Lvals[0],Lpopt[0],Lpopt[1],Lpopt[2],Lpopt[3])])
-        fig2 = plt.figure(dpi=130)
-        plt.plot(Rvals[0],Rdiv)
-        plt.plot(Lvals[0],Ldiv)
-        #plt.plot(Rarray[0],Rarray[1])
-        #plt.plot(Larray[0],Larray[1])
-
-    elif method == 2:
-        Rdiv = np.gradient(Rvals[1],Rvals[0])
-        Ldiv = np.gradient(Lvals[1],Lvals[0])
-        Rpopt, Rpcov = curve_fit(gauss1, Rvals[0],Rvals[1], [50,60,5e-11], bounds = ((25,500,1e-12), (75,700,1e-10)))
-        Lpopt,Lpcov = curve_fit(gauss1, Lvals[0], Lvals[1], [50,-200,5e-11], bounds = ((25,-300,1e-12), (75,-100,1e-10)))
-        Rarray = np.array([Rvals[0], gauss1(Rvals[0],Rpopt[0],Rpopt[1],Rpopt[2])])
-        Larray = np.array([Lvals[0], gauss1(Lvals[0],Lpopt[0],Lpopt[1],Lpopt[2])])
-        fig2 = plt.figure(dpi=130)
+        fig3 = plt.figure(dpi=130)
         plt.plot(Rvals[0],Rdiv)
         plt.plot(Lvals[0],Ldiv)
         plt.plot(Rarray[0],Rarray[1])
         plt.plot(Larray[0],Larray[1])
-        print(Rvals[0])
+
+    elif method == 2:
+        Rdiv = np.gradient(Rvals[1],Rvals[0])
+        Ldiv = np.gradient(Lvals[1],Lvals[0])
+        Rpopt, Rpcov = curve_fit(gauss1, Rvals[0],Rvals[1], [50,580,5e-11,0])
+        Lpopt,Lpcov = curve_fit(gauss1, Lvals[0], Lvals[1], [50,200,-5e-11,0])
+        Rarray = np.array([Rvals[0], gauss1(Rvals[0],Rpopt[0],Rpopt[1],Rpopt[2],Rpopt[3])])
+        Larray = np.array([Lvals[0], gauss1(Lvals[0],Lpopt[0],Lpopt[1],Lpopt[2],Lpopt[3])])
+        fig3 = plt.figure(dpi=130)
+        plt.plot(Rvals[0],Rdiv)
+        plt.plot(Lvals[0],Ldiv)
+        plt.plot(Rarray[0],Rarray[1])
+        plt.plot(Larray[0],Larray[1])
 
     else:
         return "fn not found"
     
 
 def erf(z,a,b,c,d):
-   return a*scpS.erf(b*z+c)+d
+   return a*scpS.erf(b*(z+c))+d
 
 def gauss(z,a,b,c,d):
     return c*(1/np.sqrt(2*np.pi)*a)*np.exp((-1/2)*((z-b)/a)**2)+d
 
-def gauss1(z,a,b,c):
-    return (c/(np.sqrt(2*np.pi)))*np.exp((-1/2)*((z-b)/a)**2)
+def gauss1(z,a,b,c,d):
+    return (c/(np.sqrt(2*np.pi)))*np.exp((-1/2)*((z-b)/a)**2)+d
 
 fileNameArray = []
 j=0
@@ -157,9 +155,9 @@ while j < 30:
     fileNameArray.append("BeamSizeX"+num)
 
 file = "BeamSizeX12"
+sCurve(fileNameArray,2)
+#plt.suptitle("Plots for the X direction of the beam")
 #plot(file)
-#sCurve(fileNameArray,1)
-plt.suptitle("Plots for the X direction of the beam")
 
-plot(file)
+
 plt.show()
