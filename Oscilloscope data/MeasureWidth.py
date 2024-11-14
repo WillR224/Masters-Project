@@ -1,3 +1,9 @@
+"""
+Created on Thu Nov 14 2024
+
+@author: William Rose (University of Birmingham)
+Adapted from: Will George (University of Birmingham), Jonathan Mulvey (University of Birmingham) & XiLabs test program
+"""
 from __future__ import print_function
 import sys, os, time, platform, csv
 import os.path
@@ -121,7 +127,7 @@ def run(direction,step):
 
     axis = ximc.Axis(open_name)
     axis.open_device()
-    
+
     while dist < 1000:
         for i in range(3):
             fileName = direction + "BeamSize_" + str(dist) + "_" + str(i)
