@@ -82,7 +82,33 @@ def cut(x,y):
 #    peakInt = np.min(peakArr[:,1])
 #    return peakInt
 
-def sCurve(fileNameArray,method):
+def params(b,c):
+    std = 1/(np.sqrt(2)*b)
+    mean = (-1)*c
+    return mean, std
+
+def errors1(cov_matrix,a,b,c,mean):
+    z = mean
+    dfa = scpS.erf(b*(c+z))
+    dfb = (2*a/np.sqrt(np.pi))*(c+z)*np.exp(-(b**2)*(c+z)**2)
+    dfc = (2*a*b/np.sqrt(np.pi))*np.exp(-(b**2)*(c+z)**2)
+    dfd = 1
+
+    derivatives = np.array([dfa,dfb,dfc,dfd])
+    multi = np.matmul(derivatives, cov_matrix)
+    error = np.matmul(multi, derivatives.T)
+    return np.sqrt(error)
+
+def errorsmean(cov_matrix):
+    return np.sqrt(cov_matrix[2][2])
+
+def errorssig(cov_matrix,b):
+    varb = cov_matrix[1][1]
+    sigerror = np.sqrt(varb)*(1/b)*2**(-1/4)
+    print(cov_matrix,b)
+    return sigerror
+
+def sCurve(fileNameArray,direction):
     integrals = []
     for i in range(len(fileNameArray)):
         data = getData(fileNameArray[i])
@@ -91,61 +117,30 @@ def sCurve(fileNameArray,method):
         Integral = np.min(I)
         integrals.append(Integral)
 
-    steps = np.linspace(0,870,30)
+    steps = np.linspace(0,870*(2.5),30)
     Rvals = np.array([steps[12:30],integrals[12:30]])
     Lvals = np.array([steps[0:15],integrals[0:15]])
     fig2 = plt.figure(dpi=130)
-    plt.plot(steps,integrals)
+    plt.title(f"Plot of integrated current vs distance scan the {direction} direction")
+    plt.xlabel("Scan distance ($\mu$m)")
+    plt.ylabel("Integrated current $\propto$ charge collected (C)")
+    plt.plot(steps,integrals, label = "Data")
 
-    if method == 0:
-        Rpopt, Rpcov = curve_fit(erf, Rvals[0],Rvals[1], [2e-9,0.01,-500,-2e-9])
-        Lpopt,Lpcov = curve_fit(erf, Lvals[0], Lvals[1], [-2e-9,0.01,-200,-2e-9])
-        Rarray = np.array([Rvals[0], Rpopt[0]*scpS.erf(Rpopt[1]*(Rvals[0]+Rpopt[2]))+Rpopt[3]])
-        Larray = np.array([Lvals[0], Lpopt[0]*scpS.erf(Lpopt[1]*(Lvals[0]+Lpopt[2]))+Lpopt[3]])
-        plt.plot(Rarray[0],Rarray[1])
-        plt.plot(Larray[0],Larray[1])
-        fig3 = plt.figure(dpi=130)
-        plt.plot(Rarray[0], np.gradient(Rarray[1],Rarray[0]))
-        plt.plot(Larray[0], np.gradient(Larray[1],Larray[0]))
+    Rpopt, Rpcov = curve_fit(erf, Rvals[0], Rvals[1], [2e-9,0.01,-1250,-2e-9])
+    Lpopt,Lpcov = curve_fit(erf, Lvals[0], Lvals[1], [-2e-9,0.01,-500,-2e-9])
+    Rarray = np.array([Rvals[0], Rpopt[0]*scpS.erf(Rpopt[1]*(Rvals[0]+Rpopt[2]))+Rpopt[3]])
+    Larray = np.array([Lvals[0], Lpopt[0]*scpS.erf(Lpopt[1]*(Lvals[0]+Lpopt[2]))+Lpopt[3]])
+    Rmean, Rstd = params(Rpopt[1],Rpopt[2])
+    Lmean, Lstd = params(Lpopt[1],Lpopt[2])
+    Rmeanerr, Rstderr, Lmeanerr, Lstderr = errorsmean(Rpcov), errorssig(Rpcov,Rpopt[2]), errorsmean(Lpcov), errorssig(Lpcov,Lpopt[2])
+    plt.plot(Rarray[0],Rarray[1],label = f"Best fit for RHS: \n $\mu$ = {round(Rmean)}$\pm${round(Rmeanerr)}$\mu$m \n $\sigma$ = {round(Rstd)}$\mu$m")
+    plt.plot(Larray[0],Larray[1],label = f"Best fit for LHS: \n $\mu$ = {round(Lmean)}$\pm${round(Lmeanerr)}$\mu$m \n $\sigma$ = {round(Lstd)}$\mu$m")
+    plt.legend(loc = 1, bbox_to_anchor=(1, 0.42), fontsize = 10)
 
-    elif method == 1:
-        Rdiv = np.gradient(Rvals[1],Rvals[0])
-        Ldiv = np.gradient(Lvals[1],Lvals[0])
-        Rpopt, Rpcov = curve_fit(gauss, Rvals[0],Rvals[1], [400,600,1e-11,100])
-        Lpopt,Lpcov = curve_fit(gauss, Lvals[0], Lvals[1], [50,200,1e-11,100])
-        Rarray = np.array([Rvals[0], gauss(Rvals[0],Rpopt[0],Rpopt[1],Rpopt[2],Rpopt[3])])
-        Larray = np.array([Lvals[0], gauss(Lvals[0],Lpopt[0],Lpopt[1],Lpopt[2],Lpopt[3])])
-        fig3 = plt.figure(dpi=130)
-        plt.plot(Rvals[0],Rdiv)
-        plt.plot(Lvals[0],Ldiv)
-        plt.plot(Rarray[0],Rarray[1])
-        plt.plot(Larray[0],Larray[1])
-
-    elif method == 2:
-        Rdiv = np.gradient(Rvals[1],Rvals[0])
-        Ldiv = np.gradient(Lvals[1],Lvals[0])
-        Rpopt, Rpcov = curve_fit(gauss1, Rvals[0],Rvals[1], [50,580,5e-11,0])
-        Lpopt,Lpcov = curve_fit(gauss1, Lvals[0], Lvals[1], [50,200,-5e-11,0])
-        Rarray = np.array([Rvals[0], gauss1(Rvals[0],Rpopt[0],Rpopt[1],Rpopt[2],Rpopt[3])])
-        Larray = np.array([Lvals[0], gauss1(Lvals[0],Lpopt[0],Lpopt[1],Lpopt[2],Lpopt[3])])
-        fig3 = plt.figure(dpi=130)
-        plt.plot(Rvals[0],Rdiv)
-        plt.plot(Lvals[0],Ldiv)
-        plt.plot(Rarray[0],Rarray[1])
-        plt.plot(Larray[0],Larray[1])
-
-    else:
-        return "fn not found"
-    
 
 def erf(z,a,b,c,d):
    return a*scpS.erf(b*(z+c))+d
 
-def gauss(z,a,b,c,d):
-    return c*(1/np.sqrt(2*np.pi)*a)*np.exp((-1/2)*((z-b)/a)**2)+d
-
-def gauss1(z,a,b,c,d):
-    return (c/(np.sqrt(2*np.pi)))*np.exp((-1/2)*((z-b)/a)**2)+d
 
 fileNameArray = []
 j=0
@@ -155,7 +150,7 @@ while j < 30:
     fileNameArray.append("BeamSizeX"+num)
 
 file = "BeamSizeX12"
-sCurve(fileNameArray,2)
+sCurve(fileNameArray,"x")
 #plt.suptitle("Plots for the X direction of the beam")
 #plot(file)
 
