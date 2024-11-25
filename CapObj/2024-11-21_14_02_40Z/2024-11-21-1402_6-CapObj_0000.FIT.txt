@@ -1,0 +1,20 @@
+[ZWO ASI678MM]
+Auto Exp Max Exp = 30000ms
+Auto Exp Max Gain = 300
+Auto Exp Target Brightness = 100
+Bin = 1
+Brightness = 3
+Capture Area Size = 3840 * 2160
+Colour Format = RAW16
+Debayer Type = NONE
+Exposure = 3.5ms
+Flip = None
+Gain = 0
+Hardware Bin = OFF
+High Speed Mode = OFF
+StartX = 0
+StartY = 0
+Temperature = 33.6 C
+Timestamp Frames = OFF
+USB Limit = 100
+USB Port = 3.0
