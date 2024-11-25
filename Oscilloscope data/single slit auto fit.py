@@ -14,12 +14,12 @@ import math
 #hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\2024-11-21_13_10_02Z\\2024-11-21-1310_0-CapObj_0000.FIT')
 #hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\2024-11-21_13_11_22Z\\2024-11-21-1311_3-CapObj_0000.FIT')
 #hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\2024-11-21_13_12_24Z\\2024-11-21-1312_4-CapObj_0000.FIT')
-hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\\\.FIT')
-hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\\\.FIT')
-hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\\\.FIT')
-hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\\\.FIT')
-hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\\\.FIT')
-hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\\\.FIT')
+#hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\2024-11-21_13_44_08Z\\2024-11-21-1344_1-CapObj_0000.FIT')
+#hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\2024-11-21_13_45_28Z\\2024-11-21-1345_4-CapObj_0000.FIT')
+#hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\2024-11-21_13_46_29Z\\2024-11-21-1346_4-CapObj_0000.FIT')
+#hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\2024-11-21_13_49_04Z\\2024-11-21-1349_0-CapObj_0000.FIT')
+hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\2024-11-21_13_47_20Z\\2024-11-21-1347_3-CapObj_0000.FIT')
+#hdul1 = fits.open(r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\CapObj\\\\.FIT')
 
 def single(x,I_0,a,b):
     theta = np.arctan((2*np.array(x)-b)/86000)
@@ -68,7 +68,7 @@ def fit():
     #poptx,pcovx = curve_fit(gauss, xFocus, ZxFocus,[np.max(ZxFocus),argpeak[1],sigmaAvg],bounds = ([np.max(ZxFocus)-10,0,sigmaAvg],[2*np.max(ZxFocus),10000,10000]))
     #popty,pcovy = curve_fit(gauss, yFocus, ZyFocus,[np.max(ZyFocus),argpeak[0],sigmaAvg],bounds = ([np.max(ZyFocus)-10,0,sigmaAvg],[2*np.max(ZyFocus),10000,10000]))
 
-    text = "Aperture wide open, collimator three turns left"
+    text = "Aperture turned 3cm, collimator fully right"
     fig2 = plt.figure(dpi = 200)
     plt.plot(xFocus,ZxFocus)
     plt.plot(xFocus,gauss(xFocus, *poptx),label = f"Parameters: I_0 = {round(poptx[0])} \n mean = {round(poptx[1],1)} \n std = {round(poptx[2],2)}")
