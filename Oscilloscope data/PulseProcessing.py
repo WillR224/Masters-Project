@@ -15,7 +15,7 @@ from scipy.optimize import curve_fit
 fig1 = plt.figure(dpi=130)
 fig1.set_size_inches(8,5)
 plt.subplots_adjust(hspace = 0.6, wspace = 0.4)
-
+fig2 = plt.figure(dpi=130)
 
 def getData(fileName):
     Dir = r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\Oscilloscope data\\LGAD beam measurements\\'
@@ -122,28 +122,33 @@ def sCurve(fileNameArray,direction):
         Integral = np.min(I)
         integrals.append(Integral)
 
-    steps = np.arange(2.5*8,2.5*1158,2.5*50)
-    Rvals = np.array([steps[10:25],integrals[10:25]])
-    Lvals = np.array([steps[0:12],integrals[0:12]])
-    fig2 = plt.figure(dpi=130)
-    plt.title(f"Plot of integrated current vs distance scan the {direction} direction")
+    steps = np.linspace(0,2000,30)
+    Rvals = np.array([steps[13:30],integrals[13:30]])
+    Lvals = np.array([steps[0:15],integrals[0:15]])
+
+    plt.title(f"Plot of integrated current vs distance scan the X and Y direction")
     plt.xlabel("Scan distance ($\mu$m)")
     plt.ylabel("Integrated current $\propto$ charge collected (C)")
-    plt.plot(steps,integrals, label = "Data", marker  = "x")
+    plt.plot(steps,integrals, label = f"{direction}-Data", marker  = "x", linestyle = "")
 
-    Rpopt, Rpcov = curve_fit(erf, Rvals[0], Rvals[1], [5e-10,0.004,-1900,-5e-10])
-    Lpopt,Lpcov = curve_fit(erf, Lvals[0], Lvals[1], [-5e-10,0.004,-900,-5e-10])
+    Rpopt, Rpcov = curve_fit(erf, Rvals[0], Rvals[1], [5e-9,0.004,-1400,-5e-9])
+    Lpopt,Lpcov = curve_fit(erf, Lvals[0], Lvals[1], [-5e-9,0.004,-540,-5e-9])
+
     Rarray = np.array([Rvals[0], Rpopt[0]*scpS.erf(Rpopt[1]*(Rvals[0]+Rpopt[2]))+Rpopt[3]])
     Larray = np.array([Lvals[0], Lpopt[0]*scpS.erf(Lpopt[1]*(Lvals[0]+Lpopt[2]))+Lpopt[3]])
     Rmean, Rstd = params(Rpopt[1],Rpopt[2])
     Lmean, Lstd = params(Lpopt[1],Lpopt[2])
     Rmeanerr, Rstderr, Lmeanerr, Lstderr = errorsmean(Rpcov), errorssig(Rpcov,Rpopt[2]), errorsmean(Lpcov), errorssig(Lpcov,Lpopt[2])
-    plt.plot(Rarray[0],Rarray[1],label = f"Best fit for RHS: \n $\mu$ = {round(Rmean)}$\pm${round(Rmeanerr)}$\mu$m \n $\sigma$ = {round(Rstd)}$\mu$m")
-    plt.plot(Larray[0],Larray[1],label = f"Best fit for LHS: \n $\mu$ = {round(Lmean)}$\pm${round(Lmeanerr)}$\mu$m \n $\sigma$ = {round(Lstd)}$\mu$m")
-    print(*Lpopt,*Rpopt)
+    print(Rmeanerr, Rstderr, Lmeanerr, Lstderr)
+    plt.plot(Rarray[0],Rarray[1],label = f"Best fit for RHS: \n  $\sigma_x$ = {round(Rstd)}$\pm${round(Rstderr,4)}$\mu$m")
+    plt.plot(Larray[0],Larray[1],label = f"Best fit for LHS: \n  $\sigma_y$ = {round(Lstd)}$\pm${round(Lstderr,4)}$\mu$m")
     #plt.plot(Rarray[0],Rarray[1])
     #plt.plot(Larray[0],Larray[1])
-    plt.legend(loc = 1, bbox_to_anchor=(1, 0.42), fontsize = 10)
+    
+    #print(*Lpopt,*Rpopt)
+    #plt.plot(Rarray[0],Rarray[1])
+    #plt.plot(Larray[0],Larray[1])
+    plt.legend(loc = 1, bbox_to_anchor=(1, 0.5), fontsize = 8)
 
 
 def erf(z,a,b,c,d):
@@ -167,18 +172,22 @@ def dualPlot(fileName1,fileName2):
     ax.legend(fontsize = 10)
     
 
-fileNameArray = []
+fileNameArrayY = []
 j=1
 while j < 31:
     num = str(j)
-    fileNameArray.append("BeamSizeY"+num)
+    fileNameArrayY.append("BeamSizeY"+num)
+    j += 1
+
+fileNameArrayX = []
+j=1
+while j < 31:
+    num = str(j)
+    fileNameArrayX.append("BeamSizeX"+num)
     j += 1
 
 file = "BeamSize_281124_PIN\\BeamSizeX26296"
-sCurve(fileNameArray,"y")
-#plt.suptitle("Plots for the X direction of the beam")
-plot(file)
-#plot("LGAD beam measurements\\BeamSizeY14")
-#dualPlot("LGAD beam measurements\\BeamSizeY14",file)
+sCurve(fileNameArrayX,"X")
+sCurve(fileNameArrayY, "Y")
 
 plt.show()
