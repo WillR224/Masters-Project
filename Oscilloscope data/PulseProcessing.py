@@ -18,7 +18,7 @@ plt.subplots_adjust(hspace = 0.6, wspace = 0.4)
 
 
 def getData(fileName):
-    Dir = r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\Oscilloscope data\\'
+    Dir = r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\Oscilloscope data\\LGAD beam measurements\\'
     #Dir = r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\Oscilloscope data\\'
     reader = pd.read_csv(Dir + fileName + ".csv", skiprows=24)
     data = reader.to_numpy()
@@ -167,19 +167,18 @@ def dualPlot(fileName1,fileName2):
     ax.legend(fontsize = 10)
     
 
-
 fileNameArray = []
-j=8
-while j < 1158:
+j=1
+while j < 31:
     num = str(j)
     fileNameArray.append("BeamSizeY"+num)
-    j += 50
+    j += 1
 
 file = "BeamSize_281124_PIN\\BeamSizeX26296"
-#sCurve(fileNameArray,"y")
+sCurve(fileNameArray,"y")
 #plt.suptitle("Plots for the X direction of the beam")
-#plot(file)
+plot(file)
 #plot("LGAD beam measurements\\BeamSizeY14")
-dualPlot("LGAD beam measurements\\BeamSizeY14",file)
+#dualPlot("LGAD beam measurements\\BeamSizeY14",file)
 
 plt.show()

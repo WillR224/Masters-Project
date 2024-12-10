@@ -98,7 +98,6 @@ def fit(hdul,text):
 
     poptx,pcovx = curve_fit(gauss, xFocus, ZxFocus,[np.max(ZxFocus),argpeak[1],xSigmaApprox],bounds = ([np.max(ZxFocus),0,xSigmaApprox],[2*np.max(ZxFocus),10000,10000]))
     popty,pcovy = curve_fit(gauss, yFocus, ZyFocus,[np.max(ZyFocus),argpeak[0],ySigmaApprox],bounds = ([np.max(ZyFocus),0,ySigmaApprox],[2*np.max(ZyFocus),10000,10000]))
-    print(errorssig(pcovx),errorssig(pcovy))
     #poptx,pcovx = curve_fit(gauss, xFocus, ZxFocus,[np.max(ZxFocus),argpeak[1],sigmaAvg],bounds = ([np.max(ZxFocus)-10,0,sigmaAvg],[2*np.max(ZxFocus),10000,10000]))
     #popty,pcovy = curve_fit(gauss, yFocus, ZyFocus,[np.max(ZyFocus),argpeak[0],sigmaAvg],bounds = ([np.max(ZyFocus)-10,0,sigmaAvg],[2*np.max(ZyFocus),10000,10000]))
 
@@ -119,7 +118,7 @@ def fit(hdul,text):
     plt.ylabel("Intensity")
     plt.legend(loc = 1, bbox_to_anchor=(1, 1), fontsize = 9)
     plt.savefig(autoPlotsDir+filename+r"Y.svg")
-    return (poptx[2],popty[2])
+    return (poptx[2],errorssig(pcovx),popty[2],errorssig(pcovy))
 
 def ISOstandard(hdul):
     X = np.arange(0, 3840, 1)
@@ -135,14 +134,14 @@ def ISOstandard(hdul):
     return wx
 
 globalDir = r'C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\Oscilloscope data\\height testing PiN\\'
-localDir = r"2024-12-05_14_56_09Z\\2024-12-05-1456_1-CapObj_0000"
-file = globalDir + localDir + r".FIT"
+localDir = r"2024-12-05_14_56_09Z\\2024-12-05-1456_1-CapObj_0000.FIT"
+file = globalDir + localDir
 print(file)
 hdul1 = fits.open(file)
 autoPlotsDir = r"C:\\Users\\willr\\Desktop\\Work\\Year 4\\Masters Project\\Plots\\Autoplots\\"
 text = ""
 filename = r"2024-12-05-1456"
-sigx,sigy = fit(hdul1,text)
-
+sigx, errsigx, sigy, errsigy = fit(hdul1,text)
+print(sigx, errsigx, sigy, errsigy)
 
 plt.show()
