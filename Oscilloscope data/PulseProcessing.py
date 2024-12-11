@@ -124,15 +124,15 @@ def sCurve(fileNameArray,direction):
 
     steps = np.linspace(0,2000,30)
     Rvals = np.array([steps[13:30],integrals[13:30]])
-    Lvals = np.array([steps[0:15],integrals[0:15]])
+    Lvals = np.array([steps[0:14],integrals[0:14]])
 
     plt.title(f"Plot of integrated current vs distance scan the X and Y direction")
     plt.xlabel("Scan distance ($\mu$m)")
     plt.ylabel("Integrated current $\propto$ charge collected (C)")
     plt.plot(steps,integrals, label = f"{direction}-Data", marker  = "x", linestyle = "")
 
-    Rpopt, Rpcov = curve_fit(erf, Rvals[0], Rvals[1], [5e-9,0.004,-1400,-5e-9])
-    Lpopt,Lpcov = curve_fit(erf, Lvals[0], Lvals[1], [-5e-9,0.004,-540,-5e-9])
+    Rpopt, Rpcov , Rextras1, Rextras2, Rextras3 = curve_fit(erf, Rvals[0], Rvals[1], [5e-9,0.004,-1400,-5e-9],full_output=True)
+    Lpopt, Lpcov, Lextras1, Lextras2, Lextras3 = curve_fit(erf, Lvals[0], Lvals[1], [-5e-9,0.004,-540,-5e-9], full_output = True)
 
     Rarray = np.array([Rvals[0], Rpopt[0]*scpS.erf(Rpopt[1]*(Rvals[0]+Rpopt[2]))+Rpopt[3]])
     Larray = np.array([Lvals[0], Lpopt[0]*scpS.erf(Lpopt[1]*(Lvals[0]+Lpopt[2]))+Lpopt[3]])
@@ -149,6 +149,9 @@ def sCurve(fileNameArray,direction):
     #plt.plot(Rarray[0],Rarray[1])
     #plt.plot(Larray[0],Larray[1])
     plt.legend(loc = 1, bbox_to_anchor=(1, 0.5), fontsize = 8)
+    chisquareR = np.sum(Rextras1["fvec"]**2)
+    chisquareL = np.sum(Lextras1["fvec"]**2)
+    print(chisquareR,chisquareL)
 
 
 def erf(z,a,b,c,d):
