@@ -1,4 +1,4 @@
-\documentclass[titlepage, 12pt]{article}
+\documentclass[titlepage, 12pt, notitlepage]{article}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage{textgreek}
@@ -18,108 +18,115 @@
 \usepackage{gensymb}
 \usepackage{siunitx}
 \usepackage{xcolor, colortbl}
+\usepackage{abstract}
+\renewcommand{\abstractnamefont}{\normalfont\Large\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont\large}
 \MakeOuterQuote{"}
-\usepackage[a4paper, total={17cm, 26cm}]{geometry}
+\usepackage[a4paper, left = 2cm, right = 2cm, top = 2cm, bottom = 2cm]{geometry}
 \singlespacing
 
 \begin{document}
+
 \begin{titlepage}
     \begin{center}
         \vspace*{0.5cm}
+        \hspace*{8cm}
+        \vspace*{1cm}
         \Huge
         \hline
         \vskip 16pt
-        \textbf{Masters Preliminary Report}
+        \textbf{A Study of the Electric Field Within MALTA2 Sensors Using Edge-TCT Measurements}
         \vskip 16pt
         \hline
         \vspace{0.5cm}
         \LARGE
-        \vspace{1.5cm}            
+        Masters Preliminary Report\\
+        November 2024\\
         \vspace{0.8cm}
-            
         \Large
-        William Rose\\
+        Author: William Rose\\
+        ID: 2298711\\
+        \centering
+        \vspace{0.8cm}
+        Project Partner: Abigail Harrison\\
         \vskip 2pt
-        November 2024
-        
-        \begin{abstract}\label{Abstract}
+        Supervisors: Karol Krizka, Andrew Chisholm
+        \vspace{0.8cm}
 
+
+        \begin{abstract}\label{Abstract}
+            MALTA2 is a Depleted Monolithic Active Pixel Sensor (DMAPS), a novel technology combining the front-end electronics and the active sensor area on the same silicon wafer. The internal electric field under reverse bias is to be studied experimentally using the Edge-TCT technique. This involves promoting charge carriers in the silicon lattice using a focused near-infrared laser and studying the current pulse generated. Preliminary results demonstrate that the laser charge injection method functions as expected on a PiN diode and LGAD test chips. The optical system for focusing the beam has also been studied, showing it is sufficiently small, just (7$\pm$3)\,$\mu$m wide at its focal point. The plan for the future of the project is outlined. 
         \end{abstract}
-            
+    
     \end{center}
 \end{titlepage}
 
 
+
 \section{Introduction}
-MALTA2 is a prototype of a Depleted Monolithic Active Pixel Sensor (DMAPS), a novel technology combining the front-end electronics and the active sensor area on the same silicon wafer. This is an alternative to the currently popular hybrid approach which involves attaching the pixels to a separate set of readout electronics. This reduces the amount of inactive material in a tracking detector, which reduces the amount of multiple Coulomb scattering and therefore improves the resolution on track reconstruction algorithms and momentum measurements. This technology is aimed at inner trackers of future high-flux experiments, where many particle tracks will exist simultaneously and in time and space. To make more precise measurements the properties of the pixel need to be well understood. In particular, knowledge of the electric field within the sensor is important as this affects the efficiency of charge collection as a function of the position within the pixel. 
+MALTA2 is a prototype of a Depleted Monolithic Active Pixel Sensor (DMAPS), a novel technology combining the front-end electronics and the active sensor area on the same silicon wafer. This is an alternative to the currently popular hybrid approach which involves attaching the pixels to a separate set of readout electronics. This reduces the amount of inactive material in a tracking detector. MALTA2 has a pixel pitch of 36.4$\,\mu$m and a 2$\,\mu$m central octagonal collection electrode. The small electrode gives a high signal-to-noise ratio\,\cite{Pernegger_2023}, decreasing the smallest measurable charge contribution and reducing the required thickness of the detector. These both contribute to the reduction of multiple Coulomb scattering and improve the resolution of track reconstruction algorithms and momentum measurements. This technology is aimed at inner trackers of future high-flux experiments, where many particle tracks will exist simultaneously and in time and space. To make more precise measurements the properties of the pixel need to be well understood. In particular, knowledge of the electric field within the sensor is important as this affects the efficiency of charge collection as a function of the position within the pixel. The collaboration may then want to alter the doping profile or the geometry of the detector to make a more uniform field, or to mitigate local radiation-induced fields. 
 
 The Transient Current Technique (TCT) is a method of studying the properties of a semiconductor detector by injecting a thin laser of near-infrared light at different positions and measuring the induced current at the electrode due to the motion of the charge carriers. Edge-TCT (eTCT) adapts this method further to aim the laser normal to the side of a detector (parallel to the electrode) and vary the injection depth. The transient current recorded gives insight into the strength of the electric field at the depth injected. 
 
 Previous studies have used eTCT to understand the depletion depth of MALTA2 as a function of bias voltage\,\cite{DepletionDepth}. As shown in the paper by R. Klanner et al\,\cite{EfieldETCT}, extending the eTCT model to study the electric field within a silicon sensor as a function of the bias voltage is possible. This project aims to perform a similar study on MALTA2 which will help to predict and understand its performance as a particle detector.
 
-
-
- It has a pixel pitch of 36.4$\,\mu$m and a 2$\,\mu$m central octagonal collection electrode \cite{Pernegger_2023}.
-
 \section{Theory}
 \label{Theory}
 A P-N junction is created when an N-type and P-type semiconductor are in contact. The excess electrons from the N-type drift across the boundary to fill the gaps where electrons are missing in the P-type creating a region where the number of free charge carriers is small and the conduction band is almost empty. This thin section is called the depletion region\,\cite{knoll2010radiation}. A reverse bias 
- voltage forces more charge carriers to drift across the boundary, extending the region where the conduction band is empty. When a photon enters this region, it can interact with a valence electron and promote it to the conduction band, creating an electron-hole pair. These begin drifting in opposite directions due to the potential difference and this motion induces a current in the electrode. In silicon, each electron-hole pair requires 1.12\,eV to be produced corresponding to the room temperature band gap.
+ voltage forces more charge carriers to drift across the boundary, extending the region where the conduction band is empty. When a photon enters this region, it can interact with a valence electron and promote it to the conduction band, creating an electron-hole pair. These begin drifting in opposite directions due to the potential difference and this motion induces a current in the electrode. In silicon, each electron-hole pair requires 1.12\,eV to be produced corresponding to the room temperature band gap. The laser's photon energy is 1.16\,eV, so each electron-hole pair can be assumed to be produced at rest, and its motion only from thermal motion and the electric field. 
 
-The Ramo-Shockley theorem relates the current induced on an electrode by a moving charge to the scalar product of its velocity, charge and weighting field. The weighting field is a geometric property of the detector calculated by finding the electric field when the electrode of interest has a voltage of unity and all other conductors zero. The velocity of a charge carrier in silicon can be well approximated by the product of the mobility and the electric field. The electric field strength at a point can therefore be calculated by extracting the velocity from the current pulse for a fixed weighting field.
+The Ramo-Shockley theorem relates the current induced on an electrode by a moving charge to the scalar product of its velocity, charge and weighting field. The weighting field is a geometric property of the detector calculated by finding the electric field when the electrode of interest has a voltage of unity and all other conductors zero. The velocity of a charge carrier in silicon can be approximated by the mobility times the electric field. The electric field strength at a point can be calculated by finding the velocity from the current pulse for a fixed weighting field.
 
 \section{Project Plan}
+\label{plan}
 A literature review was performed to get a baseline understanding of previous work around TCT measurements, MALTA2, and simulation techniques. For comparison, a lab and a simulation study will be completed in parallel; as the project develops, the simulation can be improved as data from the TCT measurements becomes available. To divide efforts, the lab-based TCT studies are performed by W. Rose and the simulation work by A. Harrison. The preliminary lab work involved recommissioning the TCT set-up by replicating some results from a previous user and then studying the optical system used to focus the laser which is discussed in section \ref{prelim results}.
 
-The remainder of the project will focus on eTCT measurements. Within the first two weeks, an automatic method of focusing the beam will be installed, using one of two techniques discussed in section \ref{prelim results}. From there eTCT measurements can be taken. This will be first done using a PiN diode as its simple internal structure will simplify the simulation work. It is hoped that the first measurements will be taken within a week of starting and last for up to two weeks. Providing that some MALTA2 sensors can be sourced, these will then be placed in the set-up, and measurements taken in the TCT and eTCT modes. This is expected to take the next four to five weeks, due to the more complicated structure of MALTA2. The data from both MALTA2 and the PiN diode will be analysed in parallel with the measurements due to limited weekly lab time. This will allow for a comparison between the data of the PiN diode and MALTA2. If MALTA2 sensors are unavailable, the extended study will be performed on other available sensors, like LGADs. 
+The remainder of the project will focus on eTCT measurements. Within the first two weeks, an automatic method of focusing the beam will be installed, using one of two techniques discussed in section \ref{prelim results}. From there eTCT measurements can be taken. This will be first done using a PiN diode as its simple internal structure will simplify the simulation work. It is hoped that the first measurements will be taken within a week of starting and last for up to two weeks. Providing that some MALTA2 sensors can be sourced, these will then be placed in the set-up, and measurements taken in the TCT and eTCT modes. This is expected to take the next four to five weeks, due to the more complicated structure of MALTA2. At this point, the measured data and the simulated data will be compared to ensure the simulation is accurate. The data from both MALTA2 and the PiN diode will be analysed in parallel with the measurements due to limited weekly lab time. This will allow for a comparison between the data of the PiN diode and MALTA2. If MALTA2 sensors are unavailable, the extended study will be performed on other available sensors, like LGADs. 
 
-Extracting the E-field from the data becomes increasingly complicated as the system's geometry becomes nontrivial. As discussed in section \ref{Theory}, the induced current depends on the weighting field and the charge velocity which depends on the E-field. The PiN diode is a good approximation of a parallel plate capacitor, which makes calculating the weighting field trivial so finding the E-field numerically is hard but not impossible. For MALTA2, the calculation becomes nontrivial so approximate methods and a machine-learning approach will also be used and compared. The algorithm can be trained on data from the known case of the PiN diode and simulated data of the MALTA2 pixel with a known E-field. 
-
+Extracting the E-field from the data becomes increasingly complicated as the system's geometry becomes nontrivial. As discussed in section \ref{Theory}, the induced current depends on the weighting field and the charge velocity which depends on the E-field. The PiN diode is a good approximation of a parallel plate capacitor, which makes calculating the weighting field trivial so finding the E-field numerically from data is possible. Examples of such results can be found in the paper by R. Klanner et al\,\cite{EfieldETCT}, where this has been performed for strip sensors. For MALTA2, the calculation becomes nontrivial so approximate methods and a machine-learning approach will also be used and compared. The algorithm can be trained on data from the known case of the PiN diode and simulated data of the MALTA2 pixel with a known E-field. This will be done by first training it on simulated data of the PiN diode, and comparing its predictions to the true result and correcting. Then training it on MALTA2 simulation and finally feeding it MALTA2 data to obtain the E-field. 
 
 \section{Experimental Apparatus and Procedure}
 \label{Set-up}
-The general set-up for TCT/eTCT measurements consists of a fibre-coupled laser sent into a set of optics which focus the beam to a point. This point is aimed at a sensor placed atop a 2D stage, which can be moved remotely and scan the sensor through the beam. The optics can also be moved up and down to ensure the sensor is at the vertical focal point of the beam. Generally, a beam splitter is placed before the optics to send a fraction of the laser through a beam monitor, which can be used to confirm the state of the laser externally, along with the laser's trigger output. 
+The general set-up for TCT/eTCT measurements consists of a fibre-coupled laser sent into a set of focusing optics. This is aimed at a sensor placed atop a 2D stage, which can be moved remotely to scan the sensor through the beam. Generally, a beam splitter is placed before the optics to send a fraction of the laser through a beam monitor, which can be used to confirm the state of the laser externally, along with the laser's trigger output. 
 
-The laser used for TCT measurements is near-infrared at 1064nm with a power of 100\,mW. This classifies it as 3B on the laser classification scheme\,\cite{PHE-Lasers}. In this classification, even a visible laser could permanently damage the eye, even from reflected beams. The near-infrared (and hence invisible) laser used in TCT measurements is therefore a significant hazard to the user, especially as a system is being used to focus it, and many steps need to be taken to protect against this. The entire set-up is enclosed in a light-tight aluminium box, fitted with an interlock system such that the laser doesn't have power when the door is open. Further safety considerations involve grounding the box in case the laser power supply shorts to it, and a sign on the box warning of class 3B laser radiation. 
+The laser used for TCT measurements is near-infrared at 1064nm with a power of 100\,mW. This classifies it as 3B on the laser classification scheme\,\cite{PHE-Lasers}. In this classification, even a visible laser could permanently damage the eye, even from reflected beams. For protection, the entire set-up is enclosed in a light-tight aluminium box, fitted with an interlock system so the laser loses power when the door opens. Further safety considerations involve grounding the box in case the laser power supply shorts to it, and a sign on the box warning of class 3B laser radiation. 
 
-The optical system used to focus the laser is a "ThorLabs GBE15-B Achromatic Galilean Beam Expander". This set of optics can be used to focus the beam coming from a fibre. It is attached to a vertical stage, allowing for the movement of the focal plane and has a variable aperture, allowing for the size of the focal point to be traded for collimation and vice versa.
+The optical system used to focus the laser is an Achromatic Galilean Beam Expander. This set of optics can focus the beam coming from a fibre. It is attached to a vertical stage, allowing for the movement of the focal plane. It has a variable aperture, allowing for the size of the focal point to be traded for collimation and vice versa.
 
-The 2D stage system is a remote method of positioning the sensor within the beam path. It has a single-step resolution of 2.5\,$\mu$m, and a 1/256 microstep mode resulting in an ultimate resolution of $\approx$10\,nm. It can be controlled by a set of external manual controllers, a piece of software, or a program. The stage has a threaded shaft which spins, moving the platform in the X \& Y directions. The motion of the stage and the threaded shaft is a hazard to the experiment, especially the fragile fibre optic cables for the laser and the high voltage cables for biasing the sensor. The fibre optic cables are therefore suspended from the roof of the box and the electronics cables are kept all to one side, keeping them both away from the moving parts of the stage. 
+The 2D stage system is a remote method of positioning the sensor within the beam path. It has a single-step resolution of 2.5\,$\mu$m. A set of external manual controllers, software, or a program can control it. The stage has a threaded shaft which spins, moving the platform in the X \& Y directions. The motion of the stage and the threaded shaft is a hazard to the experiment, especially the fibre optic cables for the laser and the high voltage cables for biasing the sensor. The fibre optic cables are therefore suspended from the roof of the box and the electronics cables are kept all to one side, keeping them both away from the moving parts of the stage. 
 
 \section{Preliminary Results and Analysis}
 \label{prelim results}
-To test the apparatus, the first goal was to reproduce some TCT results previously taken, shown in the thesis by J.F. Mulvey \cite{JonathanThesis}. This involved using the laser to induce charge in two types of silicon sensors, a PiN diode and an LGAD. The results from this are shown in figure \ref{fig:PiNvsLGAD}.
+To test the apparatus, the first goal was to reproduce some TCT results previously taken, shown in the thesis by J.F. Mulvey \cite{JonathanThesis}. This involved using the laser to induce charge in two types of silicon sensors, a PiN diode and an LGAD. The results from this are shown in figure \ref{fig:PiNvsLGAD}, noting the scale on the vertical axis of figure \ref{fig:PiNvsLGAD}a should say "mV".
 
-\begin{figure}[]
+\begin{figure}[H]
     \centering
-        \subfloat[\centering ]{{\includegraphics[height = 7cm]{Jonathan thesis/PiNvsLGAD.png} }}%
+        \subfloat[\centering ]{{\includegraphics[height = 6.5cm]{Jonathan thesis/PiNvsLGAD.png} }}%
     \qquad
-    \subfloat[\centering ]{{\includegraphics[height = 7cm]{PiNvsLGAD.png} }}%
+    \subfloat[\centering ]{{\includegraphics[height = 6.5cm]{PiNvsLGAD.png} }}%
     \caption{\centering Plots of PiN vs LGAD pulse from TCT measurements. (a) shows a plot from J.F. Mulvey. The voltage axis is confirmed by the author as mislabeled, it should say mV\,\cite{JonathanThesis}. (b) shows the same measurements taken in November 2024.}%
     \label{fig:PiNvsLGAD}%
 \end{figure}
 
-Both plots show a large ratio between the LGAD and PiN signals caused by the internal gain layer of the LGAD. They also show that both the PiN and the LGAD obtain a reflected pulse around 40ns later in figure \ref{fig:PiNvsLGAD}a and 15ns later in figure \ref{fig:PiNvsLGAD}b. This is caused by reflection from the different impedances at the oscilloscope terminal and the amplifier terminal and the longer time difference is caused by a longer cable in the case of figure \ref{fig:PiNvsLGAD}a. This has the benefit of isolating the initial pulse from the reflection for easier analysis so a longer cable will be used in future measurements as current pulses similar to this will be used to find the electric field. The relative shapes and sizes of these pulses show good evidence that the set-up is working correctly. 
+Both plots show a large ratio between the LGAD and PiN signals caused by the internal gain layer of the LGAD. They also show that both the PiN and the LGAD obtain a reflected pulse around 40ns later in figure \ref{fig:PiNvsLGAD}a and 15ns later in figure \ref{fig:PiNvsLGAD}b, caused by reflection at the oscilloscope terminal and the amplifier terminal. The delay difference is caused by a longer cable in the case of figure \ref{fig:PiNvsLGAD}a. This has the benefit of isolating the initial pulse from the reflection for easier analysis so a longer cable will be used in future measurements as current pulses similar to this will be used to find the electric field. The relative shapes and sizes of these pulses show good evidence that the set-up is working correctly. 
 
-For eTCT measurements, the beam spot must be small on the scale of the thickness of the sensor. To measure this, and to study the optical system, a camera with a non-zero quantum efficiency in the near IR range and a 2\,$\mu$m resolution was purchased. This could be bolted to the stage in place of the sensor and the beam spot photographed as a function of height. Photographs of the beam were taken at various heights going into and out of the focal plane, for different apertures of the optical system. These photos were fitted using a constrained Gaussian, where it was forced to reach the absolute peak and fit the thickness at the FWHM, ignoring the tails. The widths were then collected and plotted using a Python package called "laserbeamsize", shown in figure \ref{fig:BeamProfile}. This was done for each aperture size until the optimal was found, at about a 1.5cm rotation of the aperture ring.
+For eTCT measurements, the beam spot must be small on the scale of the thickness of the sensor. To measure this, and to study the optical system, a camera with a 2\,$\mu$m resolution was used. Photographs of the beam were taken at various laser heights along the focal plane, for different apertures of the optical system. These photos were fitted using a constrained Gaussian; forced to reach the absolute peak and fit the thickness at the FWHM, ignoring the tails. The widths were then plotted using a Python package called "laserbeamsize"\,\cite{laserbeamsize}, shown in figure \ref{fig:BeamProfile}b. Shown is the optimal aperture, a 1.5cm rotation of the aperture ring.
 
 \begin{figure}[H]
     \centering
-        \subfloat[\centering ]{{\includegraphics[height = 6cm]{avg beam profile 1.5cm.png} }}%
-    \qquad
-    \subfloat[\centering ]{{\includegraphics[height = 6cm]{PiNvsLGAD.png} }}%
-    \caption{\centering }%
-    \label{fig:PiNvsLGAD}%
+    \includegraphics[height = 7cm]{Untitled.png}
+    \caption{\centering Plot of the $\frac{1}{e^2}$ width of the beam as a function of distance from the focus, with fit for min focus and Rayleigh range of a Gaussian beam. }
+    \label{fig:BeamProfile}
 \end{figure}
 
-Figure \ref{fig:BeamProfile} shows the average 1/$e^{2}$ width of the beam as a function of distance from the focus. The beam is slightly elliptical, but the average of the x and y directions is taken as the ellipse maintains the same orientation at all times; this width measure is therefore valid as long as it is not compared to external data. In the plot, $\mathrm{w_0}$ is the waist - the radial width at the smallest point, $\mathrm{Z_R}$ is the Rayleigh range, the distance required for the beam's cross-section to double (or for $\mathrm{w_0} \rightarrow \sqrt{2}\mathrm{w_0}$), and $\mathrm{M^2}$ is the ratio of the "Beam Parameter Product" (BPP) of the beam to an ideal Gaussian beam. A Gaussian beam always has a Gaussian profile over the transverse intensity no matter where it is measured. The BPP is the product of the waist and the half angle at a great distance. For a Gaussian beam $\mathrm{M^2}$ is unity but no beam is perfectly Gaussian, so $\mathrm{M^2}>1$. The limiting factor of this experiment can be extracted from this data. MATLA2 has an active depth of around 30\,$\mu$m, so a beam of (7$\pm$3)\,$\mu$m wide at its thinnest is appropriate while slightly large. A Rayleigh range of 125\,$\mu$m is good however, as the size of a single MATLA2 pixel in either direction is 36.4\,$\mu$m, therefore it is valid to approximate the beam's width as invariant on the scale of one pixel. 
+Figure \ref{fig:BeamProfile} shows the width of the beam as a function of distance from the focus. The beam is slightly elliptical, but the average of the x and y directions is taken. In the plot, $\mathrm{w_0}$ is the radial width at the smallest point, $\mathrm{Z_R}$ is the Rayleigh range, the distance for the beam's cross-section to double, and $\mathrm{M^2}$ is a measure of how Gaussian the beam is, where $\mathrm{M^2}$ is unity for a Gaussian beam. No such beam exists, so $\mathrm{M^2}>1$. The limiting factor of this experiment can be extracted from this data. MATLA2 has an active depth of around 30\,$\mu$m, so a beam of (7$\pm$3)\,$\mu$m wide at its thinnest is appropriate while slightly large. A Rayleigh range of (120$\pm$106)\,$\mu$m is good, as the width of a single MATLA2 pixel is 36.4\,$\mu$m, therefore it is valid to approximate the beam's width as invariant on the scale of one pixel, however further work should be done to reduce the uncertainty. 
 
-Sensor Pulses
-Test Scans (Width Measurements)
-Beam photos and analysis
+A similar analysis was also performed by scanning the beam over the diode, entering and leaving the window which allows transmission of the laser into the silicon. The charge collected as a function of position can then be plotted to determine the width of the beam from the "turn on distance", as shown in Berlea et al\,\cite{DepletionDepth}. This is omitted as the results do not agree with the camera method. It is planned that this tension be resolved, as focusing using the sensor itself removes the errors involved in translating the focus from the sensor to the camera. 
 
+\section{Conclusion}
+The preliminary results show that the TCT set-up works as expected and produces a beam with a focal width of (7$\pm$3)\,$\mu$m. This 
 
-
+\newpage
 \bibliography{ref}
 \bibliographystyle{vancouver}
 \end{document}
